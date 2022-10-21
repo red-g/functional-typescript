@@ -31,7 +31,7 @@ const Option = {
     ...Variants,
 }
 ```
-## Pattern Matching
+## Branch Matching
 Most of the heavy lifting is already out of the way. All we need to do is add the `match` function to our `Impl` object from the `Struct` module, passing it our `Variants` object for the variants to check against.
 
 ```
