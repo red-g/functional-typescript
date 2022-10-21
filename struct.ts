@@ -22,28 +22,3 @@ export const match =
     return (instance: F[keyof V]): R =>
       paths.get(instance.type)!(instance as any);
   };
-/*module Test {
-  const Some = <T>(value: T) => ({
-    type: Some,
-    value,
-  });
-
-  const None = () => none;
-  const none = { type: None };
-
-  const SomeOrNone = <T>(value: T) => (value ? Some(value) : None());
-
-  let x = SomeOrNone(1);
-  if (Obj.isa(Some, x)) {
-    console.log(x.value);
-  } else {
-    console.log("None");
-  }
-  const Option = { Some: Some as typeof Some<any>, None };
-  let z = Obj.match(Option)({
-    Some: (s: Obj.Typed<typeof Some<number>>) => s.value,
-    None: (n) => 1,
-  })(none);
-
-  console.log(z);
-}*/
