@@ -8,8 +8,8 @@ This repo is my take on the some of the functional libraries and approaches to t
 Across the hkt, utils, and struct folders you will find the functionality and typing required for higher kinded types, pattern matching, structs, piping, and type classes.<br/>I provided the option file as an example of an implementation making use of these features, while the index file shows the library and option type in use.
 </p>
 <h2>Creating an Enum</h2>
-<p>Since an enum variant is both a function and a type (ex: ```Some(3)``` returns a value of type ```Some```), you need to export a module with the same name as your enum object which declares your variant types. The enum object is just an object filled with pure functions, chief among them the enum variant constructors, for example ```Some``` and ```None``` for the ```Option``` type.</p>
-<p>Note that in the example we break up the enum definition into separate constant objects, as the ```None``` constructor always returns the singleton instance ```none```, also stored on the enum object, causing a cyclical error if they were all defined in a single object. This technique also allows you to more easily implement existing interfaces while maintaining type safety, as we'll see later.</p>
+<p>Since an enum variant is both a function and a type (ex: `Some(3)` returns a value of type `Some`), you need to export a module with the same name as your enum object which declares your variant types. The enum object is just an object filled with pure functions, chief among them the enum variant constructors, for example `Some` and `None` for the `Option` type.</p>
+<p>Note that in the example we break up the enum definition into separate constant objects, as the `None` constructor always returns the singleton instance `none`, also stored on the enum object, causing a cyclical error if they were all defined in a single object. This technique also allows you to more easily implement existing interfaces while maintaining type safety, as we'll see later.</p>
 ```
 export declare module Option {
     type Some<T> = { value: T; type: typeof Variants.Some };
@@ -33,7 +33,7 @@ const Option = {
 ```
 <h2>Pattern Matching</h2>
 <p>
-Most of the heavy lifting is already out of the way. All we need to do is add the ```match``` function to our ```Impl``` object from the ```Struct``` module, passing it our ```Variants``` object for the variants to check against.
+Most of the heavy lifting is already out of the way. All we need to do is add the `match` function to our `Impl` object from the `Struct` module, passing it our `Variants` object for the variants to check against.
 </p>
 ```
 import * as Struct from "./struct.js";
@@ -44,14 +44,14 @@ const Impl = {
 }
 ```
 <p>
-Now we can match the different variants of our enum for a value of type ```Option```!
+Now we can match the different variants of our enum for a value of type `Option`!
 </p>
 ```
-const possiblyThree = Some(3)
+const possiblyThree = Option.Some(3)
 Option.match({
-    Some: (s) => console.log(`The number $(s.value)`)
+    Some: (s) => console.log("The number", s.value)
     None: (n) => console.log("Nada")
-})
+})(possiblyThree)
 ```
 <h2>Higher Kinded Types and Type Classes</h2>
 <h2>Future Plans</h2>
