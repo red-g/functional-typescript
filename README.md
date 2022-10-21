@@ -51,6 +51,33 @@ Option.match({
 })(possiblyThree)
 ```
 ## Higher Kinded Types and Type Classes
-### WIP
+Higher kinded types allow us to maintain type safety for common design patterns, like functors (map) or monads (flatMap). Take the type signature of map, for example: `(a => b) => (T<a> => T<b>)` (if you are only familiar with map in the context of lists, imagine replacing list with some arbitrary parameterized type). This is not expressable in typescript ordinarily. However, a number of clever work arounds have been developed, and this library uses one of the more minimal designs. To make the `Option` type a higher kinded type--what would be T in the prior example--we add a short second type, `OptionHKT` to our types module. Now to generate the type for the map function, we can pass `OptionHKT` to the `Functors` interface. This works due to the magic `this` keyword, which updates as the type changes.
+```
+export declare module Option {
+  type Some<T> = { value: T; type: typeof Variants.Some };
+  type None = { type: typeof Variants.None };
+  type Variant<T> = Some<T> | None;
+  interface VariantHKT extends HKT {
+    wrapper: Variant<this["type"]>;
+  }
+}
+```
+Now we can implement our map function using the `Functor` interface from the `HKT` module. Once again, breaking up the enum objects comes in handy.
+```
+import { Functor } from "./hkt.d.ts";
+
+const Functor: Functor<OptionHKT> = {
+    map: (f) => Impl.match({
+        Some: (s) => Variants.Some(f(s.value)),
+        None: (n) => n,
+    }),
+}
+export const Option = {
+    ...Impl,
+    ...Variants,
+    ...Functor
+}
+```
+
 ## Future Plans
-This project is still in its very early stages but I hope that I won't have to add much more, since the building blocks its provides should be flexible enough for most situations. With that said, an immediate goal is to add in automatically implemented methods with type classes (like first for an iterable, etc). 
+This project is still in its very early stages but I hope that I won't have to add much more, since the building blocks its provides should be flexible enough for most situations. With that said, an immediate goal is to add in automatically implemented methods with type classes (like first for an iterable, etc). Additionally, match's type inference isn't very helpful for generic types like `Some`, so hopefully it can be rewritten to better predict.
