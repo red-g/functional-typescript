@@ -3,7 +3,7 @@ import { Option } from "./option.js";
 
 let z = Option.map((x: number) => x + 1)(Option.Some(3));
 //Some(4)
-console.log("Mapping", z);
+console.log("Mapping option", z);
 
 type Struct = ((value: number) => Instance) & Cat<Instance>;
 type Instance = {
@@ -52,3 +52,12 @@ const optionToBool = Option.match({
 
 console.log(optionToBool(Option.Some(1)))
 //true
+
+import { Result } from "./result.js";
+
+const a = Result.Ok<number, string>(1)
+const b = Result.map<number, number, string>(v => v + 1)(a)
+//typescript's limited type inference means that right now, Results require a lot of annotations
+
+console.log("Mapping result", b)
+//Ok(2)

@@ -21,7 +21,7 @@ const Variants = {
     }),
 }
 
-const Impl = {//monad doesn't work with double hkts
+const Impl = {
     match: Struct.match(Variants) as Result.Match,
 }
 
@@ -55,11 +55,8 @@ const Monad: Monad2<Result.VariantHKT2> = {
     }),
 }
 
-const Result = {
+export const Result = {
     ...Impl,
     ...Monad,
     ...Variants,
 }
-
-const x = Variants.Ok<number, string>(1)
-const y = Result.map<number, number, string>((v: number) => v + 1)(x)

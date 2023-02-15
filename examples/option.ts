@@ -11,10 +11,6 @@ export declare module Option {
   type Match = <T, R>(f: Struct.ToFuncs<{ Some: Option.Some<T>, None: Option.None }, R>) => (i: Option.Variant<T>) => R
 }
 
-const Some = {
-  unwrap: <T>(s: Option.Some<T>) => s.value,
-}
-
 //"trait" implementations
 const Variants = {
   Some: <T>(value: T): Option.Variant<T> => ({
@@ -25,7 +21,7 @@ const Variants = {
 }
 
 const Impl = {
-  match: Struct.match(Variants) as Option.Match,
+  match: Struct.match(Variants) as Option.Match,//this cast simplifies match to two type parameters
   none: { type: Variants.None },
 }
 
