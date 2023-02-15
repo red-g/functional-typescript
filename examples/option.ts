@@ -1,4 +1,4 @@
-import * as Struct from "./struct.js";
+import * as Struct from "../src/struct.js";
 
 //type declarations
 export declare module Option {
@@ -8,59 +8,61 @@ export declare module Option {
   interface VariantHKT extends HKT {
     wrapper: Variant<this["type"]>;
   }
+  type Match = <T, R>(f: Struct.ToFuncs<{ Some: Option.Some<T>, None: Option.None }, R>) => (i: Option.Variant<T>) => R
+}
+
+const Some = {
+  unwrap: <T>(s: Option.Some<T>) => s.value,
 }
 
 //"trait" implementations
 const Variants = {
-  Some: <T>(value: T) => ({
+  Some: <T>(value: T): Option.Variant<T> => ({
     value,
     type: Variants.Some,
   }),
-  None: () => Impl.none,
+  None: <T>(): Option.Variant<T> => Impl.none,
 }
 
 const Impl = {
-  match: Struct.match(Variants),
+  match: Struct.match(Variants) as Option.Match,
   none: { type: Variants.None },
 }
 
 const Monad: Monad<Option.VariantHKT> = {
   map: (f) => Impl.match({
-    Some: (s: any) => Variants.Some(f(s.value)),
-    None: (n: any) => n,
+    Some: (s) => Variants.Some(f(s.value)),
+    None: (n) => n,
   }),
   pure: Variants.Some,
   apply: Impl.match({
-    Some: (s: any) => Option.map(s.value),
-    None: (n) => (_: any) => n,
+    Some: (s) => Option.map(s.value),
+    None: (n) => (_) => n,
   }),
-  empty: Impl.none,
   fmap: (f) =>
     Impl.match({
-      Some: (s: any) => f(s.value),
+      Some: (s) => f(s.value),
       None: (n) => n,
     }),
   join: Impl.match({
-    Some: (s: any) => s.value,
+    Some: (s) => s.value,
     None: (n) => n,
   }),
   cat: Impl.match({
-    Some: (a: any) =>
+    Some: (a) =>
       Impl.match({
         Some: (b) => Variants.Some(a.value.type.cat(a.value)(b.value)),
-        None: (_) => a,
+        None: () => a,
       }),
-    None: (_) =>
-      Impl.match({
-        Some: (b: any) => b,
-        None: (n) => n,
-      }),
+    None: () =>
+      c => c
   }),
 }
 
 //combining the implementations into final export
+//consider exporting every module to prevent name collisions
 export const Option = {
+  ...Monad,
   ...Variants,
   ...Impl,
-  ...Monad
 };
