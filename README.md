@@ -2,7 +2,7 @@
 ## Update From The Future
 My perspective has shifted a lot on this experiment since its creation. While I can appreciate a lot of the interesting techiques I used to simulate things like higher kinded types and sum types, I see now that they introduce a lot of unnecessary complexity. Like pretty much every functional typescript project, it tries to fit a square peg into a round whole. Javascript, or some variation of it, is never going to be the answer.
 
-I think [elm](https://elm-lang.org) does an *amazing* job not only making functional programming ergonomic but performant on the web. It's a big departure from traditional javascript web apps, but once you acclimate, you can never look back to HTML, CSS, or JS.
+I think [elm](https://elm-lang.org) does an *amazing* job not only making functional programming ergonomic but performant on the web. It's a big departure from traditional javascript web apps, but once you acclimate, it's hard to go back to HTML, CSS, or JS.
 
 ## Introduction
 A simple and flexible take on functional typescript programming.
